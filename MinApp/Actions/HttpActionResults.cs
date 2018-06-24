@@ -55,7 +55,7 @@ namespace MinApp.Actions
         {
             base.WriteResponse(context);
 
-            context.Response.ContentType = "plain/text";
+            context.Response.ContentType = "text/plain";
             using (var streamWriter = new StreamWriter(context.Response.OutputStream))
             {
                 streamWriter.Write(this.Response);

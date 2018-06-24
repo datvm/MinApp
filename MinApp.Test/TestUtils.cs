@@ -12,7 +12,7 @@ namespace MinApp.Test
     {
 
         public const string TestFilePath = "TestData/test.txt";
-        public const string TestFileContentType = "plain/text";
+        public const string TestFileContentType = "text/plain";
 
         public static void SetEntryAssembly()
         {

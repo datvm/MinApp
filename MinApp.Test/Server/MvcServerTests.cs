@@ -52,7 +52,7 @@ namespace MinApp.Test.Server
             var response = RestClient.Execute(request);
 
             Assert.AreEqual(System.Net.HttpStatusCode.OK, response.StatusCode);
-            Assert.AreEqual("plain/text", response.ContentType);
+            Assert.AreEqual("text/plain", response.ContentType);
             Assert.AreEqual("Hello World", response.Content);
         }
 
@@ -150,6 +150,86 @@ namespace MinApp.Test.Server
 
             var json = JsonConvert.DeserializeObject<JObject>(response.Content);
             Assert.AreEqual(content, json["Content"].Value<string>());
+        }
+
+        [TestMethod]
+        public void TestHttpVerb1()
+        {
+            const string content = "Hello";
+
+            var request = new RestRequest("test/http-verb", Method.GET)
+                .AddQueryParameter("content", content);
+            var response = RestClient.Execute(request);
+
+            Assert.AreEqual(System.Net.HttpStatusCode.OK, response.StatusCode);
+            Assert.AreEqual("text/plain", response.ContentType);
+            Assert.AreEqual(content, response.Content);
+        }
+
+        [TestMethod]
+        public void TestHttpVerb2()
+        {
+            const string content = "Hello";
+
+            var request = new RestRequest("test/http-verb", Method.POST)
+                .AddQueryParameter("content", content);
+            var response = RestClient.Execute(request);
+
+            Assert.AreEqual(System.Net.HttpStatusCode.NotFound, response.StatusCode);
+        }
+
+        [TestMethod]
+        public void TestWildcardHttpVerb1()
+        {
+            var request = new RestRequest("test/http-wildcard-verb", Method.GET);
+            var response = RestClient.Execute(request);
+
+            Assert.AreEqual(System.Net.HttpStatusCode.NoContent, response.StatusCode);
+        }
+
+        [TestMethod]
+        public void TestWildcardHttpVerb2()
+        {
+            const string content = "Hello";
+
+            var request = new RestRequest("test/http-wildcard-verb", Method.POST)
+                .AddQueryParameter("content", content);
+            var response = RestClient.Execute(request);
+
+            Assert.AreEqual(System.Net.HttpStatusCode.OK, response.StatusCode);
+            Assert.AreEqual("text/plain", response.ContentType);
+            Assert.AreEqual(content, response.Content);
+        }
+
+        [TestMethod]
+        public void TestBody()
+        {
+            const string content = "Hello";
+
+            var request = new RestRequest("test/body", Method.POST)
+                .AddParameter("text/plain", content, ParameterType.RequestBody);
+            var response = RestClient.Execute(request);
+
+            Assert.AreEqual(System.Net.HttpStatusCode.OK, response.StatusCode);
+            Assert.AreEqual("text/plain", response.ContentType);
+            Assert.AreEqual(content, response.Content);
+        }
+
+        [TestMethod]
+        public void TestBodyJson()
+        {
+            const string content = "Hello";
+
+            var request = new RestRequest("test/body-json", Method.POST)
+                .AddJsonBody(new { content, });
+            var response = RestClient.Execute(request);
+
+            Assert.AreEqual(System.Net.HttpStatusCode.OK, response.StatusCode);
+            Assert.AreEqual("application/json", response.ContentType);
+
+            var parsedJson = JsonConvert.DeserializeObject<JObject>(response.Content);
+
+            Assert.AreEqual(content, parsedJson["content"].Value<string>());
         }
 
         [ClassCleanup]

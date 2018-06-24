@@ -70,6 +70,35 @@ namespace MinApp.Test.TestData
             });
         }
 
+        [HttpGet, Route("test/http-verb")]
+        public IActionResult TestHttpVerb(string content)
+        {
+            return this.String(content);
+        }
+
+        [HttpGet, Route("test/http-wildcard-verb")]
+        public void TestWildcardHttpVerb1() { }
+
+        [Route("test/http-wildcard-verb")]
+        public IActionResult TestWildcardHttpVerb2(string content)
+        {
+            return this.String(content);
+        }
+
+        [HttpPost, Route("test/body")]
+        public async Task<IActionResult> TestBody()
+        {
+            var content = await this.GetBodyString();
+            return this.String(content);
+        }
+
+        [HttpPost, Route("test/body-json")]
+        public async Task<IActionResult> TestBodyJson()
+        {
+            var content = await this.GetJsonBody<dynamic>();
+            return this.Json(content);
+        }
+
     }
 
 }

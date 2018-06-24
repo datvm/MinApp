@@ -70,7 +70,7 @@ namespace MinApp.Actions
             { ".tiff", "image/tiff" },
             { ".ts", "application/typescript" },
             { ".ttf", "font/ttf" },
-            { ".txt", "plain/text" },
+            { ".txt", "text/plain" },
             { ".vsd", "application/vnd.visio" },
             { ".wav", "audio/wav" },
             { ".weba", "audio/webm" },
