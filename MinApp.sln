@@ -7,6 +7,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MinApp", "MinApp\MinApp.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MinApp.Test", "MinApp.Test\MinApp.Test.csproj", "{9430B175-1C45-47FD-A32B-75BD16C57F9E}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Demo", "Demo", "{0B6F16B0-1DA2-4066-8275-7C8757AB75D0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MinApp.Demo.Backend", "Demo\MinApp.Demo.Backend\MinApp.Demo.Backend.csproj", "{35718AE9-2A8A-468A-B50F-4123B5F6FC28}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,9 +25,16 @@ Global
 		{9430B175-1C45-47FD-A32B-75BD16C57F9E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9430B175-1C45-47FD-A32B-75BD16C57F9E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9430B175-1C45-47FD-A32B-75BD16C57F9E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{35718AE9-2A8A-468A-B50F-4123B5F6FC28}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{35718AE9-2A8A-468A-B50F-4123B5F6FC28}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{35718AE9-2A8A-468A-B50F-4123B5F6FC28}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{35718AE9-2A8A-468A-B50F-4123B5F6FC28}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{35718AE9-2A8A-468A-B50F-4123B5F6FC28} = {0B6F16B0-1DA2-4066-8275-7C8757AB75D0}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F3998ADF-C992-4DAD-835E-2E8F8B1B5B6C}
