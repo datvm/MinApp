@@ -6,11 +6,11 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("MinApp")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("A mini framework to quickly make small WPF app with HTML5, CSS3 and Javascript.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("Luke Vo")]
 [assembly: AssemblyProduct("MinApp")]
-[assembly: AssemblyCopyright("Copyright ©  2018")]
+[assembly: AssemblyCopyright("Copyright ©Luke Vo 2018")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
