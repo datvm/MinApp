@@ -1,4 +1,6 @@
-﻿using System;
+﻿using MinApp.Actions;
+using MinApp.Routes;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -11,122 +13,121 @@ using System.Threading.Tasks;
 namespace MinApp.Server
 {
 
-    public class MvcServer : IServer
+    public class MvcServer : BaseServer
     {
-        private const int BufferSize = 1 * 1024 * 1024; // 1MB
 
         public string FileFolder { get; set; }
         public bool FileFallback { get; set; } = false;
+        public IRouteTable RouteTable { get; set; }
 
-        public string HostName { get; set; } = "localhost";
-        public int Port { get; set; }
+        public bool DisableCache { get; set; } = true;
 
-        public bool IsRunning { get; protected set; }
-        public bool IsDisposed { get; protected set; }
-
-        public Uri RootUri
-        {
-            get
-            {
-                return new Uri($"http://localhost:{this.Port}/");
-            }
-        }
-
-        private HttpListener HttpListener { get; set; } = new HttpListener();
-        protected CancellationTokenSource ServerCancelTokenSource { get; set; } = new CancellationTokenSource();
-
-        protected string ServerPath { get; set; }
-
-        public MvcServer()
-        {
-            this.ServerPath = Path.GetFileName(this.GetType().Assembly.Location);
-        }
+        public MvcServer() { }
 
         public MvcServer(string fileFolder) : this()
         {
             this.FileFallback = true;
             this.FileFolder = fileFolder;
+
+            this.RouteTable = new DefaultRouteTable();
+            this.RouteTable.LoadAttributeRoutes();
         }
 
-        public void Start()
+        protected override async Task ProcessRequestAsync(HttpListenerContext context)
         {
-            if (this.IsRunning)
+            var route = this.RouteTable.Resolve(context);
+            IActionResult actionResult = null;
+
+            if (route == null && this.FileFallback)
             {
-                throw new InvalidOperationException("The Server is already running");
+                actionResult = this.FallbackToFile(context);
+            }
+            else
+            {
+                var controllerInstance = route.ControllerConstructor
+                    .Invoke(MinAppUtils.EmptyObjectArray) as ApiController;
+
+                controllerInstance.Server = this;
+                controllerInstance.Context = context;
+
+                var methodParams = this.ParseParameters(controllerInstance, route);
+                var methodResult = route.Method.Invoke(controllerInstance, methodParams);
+
+                if (route.IsAsync)
+                {
+                    var resultTask = methodResult as Task;
+                    await resultTask;
+
+                    if (route.AsyncReturnType == null)
+                    {
+                        actionResult = StatusCodeActionResult.NoContent();
+                    }
+                    else
+                    {
+                        actionResult = ((dynamic) methodResult).Result;
+                    }
+                }
+                else
+                {
+                    if (route.ReturnType == typeof(void))
+                    {
+                        actionResult = StatusCodeActionResult.NoContent();
+                    }
+                }
             }
 
-            if (this.IsDisposed)
+            if (actionResult == null)
             {
-                throw new InvalidOperationException("The Server is Disposed");
+                actionResult = StatusCodeActionResult.NotFound();
             }
 
-            this.IsRunning = true;
-
-            if (this.Port == 0)
+            if (this.DisableCache)
             {
-                this.Port = this.FindFreeTcpPort();
+                context.Response.AddHeader("Cache-Control", "no-cache");
             }
 
-            Task.Run(() =>
-            {
-                this.Process();
-            });
+            actionResult.WriteResponse(context);
         }
 
-        private void Process()
+        protected FileActionResult FallbackToFile(HttpListenerContext context)
         {
-            this.ServerCancelTokenSource = new CancellationTokenSource();
+            var path = context.GetPath();
 
-            var token = this.ServerCancelTokenSource.Token;
-
-            Task.Run(async () =>
+            var filePath = Path.Combine(this.FileFolder, path);
+            if (File.Exists(filePath))
             {
-                while (!token.IsCancellationRequested)
+                return new FileActionResult(filePath);
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        protected object[] ParseParameters(ApiController controller, MvcRouteInfo routeInfo)
+        {
+            var result = new object[routeInfo.Parameters.Length];
+
+            for (int i = 0; i < routeInfo.Parameters.Length; i++)
+            {
+                var param = routeInfo.Parameters[i];
+
+                var name = param.Name;
+                var value = controller.Parameters[name];
+
+                if (value != null)
                 {
                     try
                     {
-                        var context = this.HttpListener.GetContext();
-                        await this.ProcessRequest(context);
+                        result[i] = Convert.ChangeType(value, param.ParameterType);
                     }
-                    catch (Exception ex)
-                    {
-
-                    }
+                    catch (Exception) { }
                 }
-            }, token);
+            }
+
+            return result;
         }
 
-        protected virtual async Task ProcessRequest(HttpListenerContext context)
-        {
-            var relativePath = context.Request.Url.AbsolutePath.Substring(1);
-        }
-
-        public void Stop()
-        {
-
-        }
-
-        public string CombineServerPath(params string[] paths)
-        {
-            return Path.Combine(this.ServerPath, Path.Combine(paths));
-        }
-
-        public void Dispose()
-        {
-            throw new NotImplementedException();
-        }
-
-        protected int FindFreeTcpPort()
-        {
-            TcpListener l = new TcpListener(IPAddress.Loopback, 0);
-            l.Start();
-            int port = ((IPEndPoint)l.LocalEndpoint).Port;
-            l.Stop();
-
-            return port;
-        }
-
-        
     }
 
 }

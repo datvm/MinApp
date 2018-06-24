@@ -10,6 +10,11 @@ namespace MinApp
     public static class MinAppUtils
     {
 
+        internal static Type[] EmptyTypeArray = new Type[0];
+        internal static object[] EmptyObjectArray = new object[0];
+
     }
+
+
 
 }

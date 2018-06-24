@@ -31,12 +31,15 @@ namespace MinApp.Server
 
         public event ServerLogEventHandler Log;
 
-        private HttpListener HttpListener { get; set; } = new HttpListener();
-        protected CancellationTokenSource ServerCancelTokenSource { get; set; } = new CancellationTokenSource();
+        protected HttpListener HttpListener { get; set; }
+        protected CancellationTokenSource ServerCancelTokenSource { get; set; }
 
         protected string ServerPath { get; set; }
 
-        public BaseServer() { }
+        public BaseServer()
+        {
+            this.ServerPath = Path.GetFileName(this.GetType().Assembly.Location);
+        }
 
         public virtual void Start()
         {
@@ -65,6 +68,8 @@ namespace MinApp.Server
                 this.WriteVerbose($"Found port: {this.Port}.");
             }
 
+            this.ServerCancelTokenSource = new CancellationTokenSource();
+
             var absoluteRootUri = this.RootUri.AbsoluteUri;
             this.HttpListener = new HttpListener();
             this.HttpListener.Prefixes.Add(absoluteRootUri);
@@ -81,7 +86,7 @@ namespace MinApp.Server
                 {
                     this.WriteCriticalException(ex);
                 }
-                
+
             });
 
             this.WriteVerbose("Server start successfully.");
@@ -93,8 +98,6 @@ namespace MinApp.Server
             {
                 this.WriteVerbose("Server Process Thread started: " +
                 Thread.CurrentThread.ManagedThreadId);
-
-                this.ServerCancelTokenSource = new CancellationTokenSource();
 
                 var token = this.ServerCancelTokenSource.Token;
 
@@ -114,7 +117,24 @@ namespace MinApp.Server
 
                                 if (!token.IsCancellationRequested)
                                 {
-                                    await this.ProcessRequestAsync(context);
+                                    try
+                                    {
+                                        await this.ProcessRequestAsync(context);
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        this.WriteLog("An unhandled server error occured.", ServerLogScope.Warning, ex);
+                                        context.Response.StatusCode = 500;
+
+                                        using (var streamWriter = new StreamWriter(context.Response.OutputStream))
+                                        {
+                                            streamWriter.WriteLine(ex.ToString());
+                                        }
+                                    }
+                                    finally
+                                    {
+                                        context.Response.Close();
+                                    }
                                 }
                                 else
                                 {
