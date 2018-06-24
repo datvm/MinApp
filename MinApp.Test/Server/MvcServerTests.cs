@@ -26,7 +26,7 @@ namespace MinApp.Test.Server
         [ClassInitialize]
         public static void Initialize(TestContext context)
         {
-            TestUtils.SetEntryAssembly();
+            //TestUtils.SetEntryAssembly();
             
             Server = new MvcServer("");
 

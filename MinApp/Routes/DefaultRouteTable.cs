@@ -28,10 +28,8 @@ namespace MinApp.Routes
             this.ParseController(typeof(T));
         }
 
-        public void LoadAttributeRoutes()
+        public void LoadAttributeRoutes(Assembly assembly)
         {
-            var assembly = Assembly.GetEntryAssembly();
-
             this.ParseAssembly(assembly);
         }
 

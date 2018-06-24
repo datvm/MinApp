@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
+using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -20,13 +21,18 @@ namespace MinApp.Server
         public bool FileFallback { get; set; } = false;
         public IRouteTable RouteTable { get; set; }
 
-        public MvcServer()
+        public MvcServer() : this(Assembly.GetCallingAssembly())
         {
-            this.RouteTable = new DefaultRouteTable();
-            this.RouteTable.LoadAttributeRoutes();
+            // Do nothing
         }
 
-        public MvcServer(string fileFolder) : this()
+        public MvcServer(Assembly registeringAssembly)
+        {
+            this.RouteTable = new DefaultRouteTable();
+            this.RouteTable.LoadAttributeRoutes(registeringAssembly);
+        }
+
+        public MvcServer(string fileFolder) : this(Assembly.GetCallingAssembly())
         {
             this.FileFallback = true;
             this.FileFolder = fileFolder;
