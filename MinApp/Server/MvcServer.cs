@@ -97,6 +97,11 @@ namespace MinApp.Server
         {
             var path = context.GetPath();
 
+            if (path == "" || path.EndsWith("/"))
+            {
+                path += "index.html";
+            }
+
             var filePath = Path.Combine(this.FileFolder, path);
             if (File.Exists(filePath))
             {

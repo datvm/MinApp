@@ -115,6 +115,7 @@ namespace MinApp.Server
                             try
                             {
                                 var context = this.HttpListener.GetContext();
+                                this.WriteInfo(context.Request.Url.AbsoluteUri);
                                 this.WriteVerbose("Request received, processing...");
 
                                 if (!token.IsCancellationRequested)
