@@ -10,7 +10,7 @@
     <projectUrl>https://github.com/datvm/MinApp</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
-    <releaseNotes>Initial Release.</releaseNotes>
+    <releaseNotes>https://github.com/datvm/MinApp/releases</releaseNotes>
     <copyright>Copyright 2018</copyright>
     <tags>framework minapp css css3 html html5 javascript web mvc</tags>
   </metadata>
