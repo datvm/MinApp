@@ -4,16 +4,16 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{35718AE9-2A8A-468A-B50F-4123B5F6FC28}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>MinApp.Demo.Backend</RootNamespace>
-    <AssemblyName>MinApp.Demo.Backend</AssemblyName>
+    <ProjectGuid>{3E91E6CB-FCDF-4DFF-AF29-046484E937F9}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>MinApp.Demo.ServerOnly</RootNamespace>
+    <AssemblyName>MinApp.Demo.ServerOnly</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -23,6 +23,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -33,8 +34,6 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Windows" />
-    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -43,39 +42,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AppCore.cs" />
-    <Compile Include="Controllers\DialogController.cs" />
-    <Compile Include="Controllers\FileController.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MinApp.Demo.Backend\MinApp.Demo.Backend.csproj">
+      <Project>{35718ae9-2a8a-468a-b50f-4123b5f6fc28}</Project>
+      <Name>MinApp.Demo.Backend</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\MinApp\MinApp.csproj">
-      <Project>{8ca26fe5-0d2b-482d-8d83-f1a81a05eb9d}</Project>
+      <Project>{8CA26FE5-0D2B-482D-8D83-F1A81A05EB9D}</Project>
       <Name>MinApp</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup />
-  <ItemGroup>
-    <Content Include="UIDev\css\site.css">
-      <DependentUpon>site.scss</DependentUpon>
-    </Content>
-    <Content Include="UIDev\css\site.min.css">
-      <DependentUpon>site.css</DependentUpon>
-    </Content>
-    <Content Include="UIDev\index.html" />
-    <Content Include="UIDev\js\app.js" />
-    <Content Include="UIDev\lib\bootstrap\css\bootstrap.min.css" />
-    <Content Include="UIDev\lib\fontawesome\css\font-awesome.min.css" />
-    <Content Include="UIDev\lib\jquery\jquery-3.3.1.min.js" />
-    <Content Include="UIDev\lib\polyfill\polyfill.min.js" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="compilerconfig.json" />
-    <None Include="compilerconfig.json.defaults">
-      <DependentUpon>compilerconfig.json</DependentUpon>
-    </None>
-    <None Include="UIDev\css\site.scss" />
-    <None Include="UIDev\lib\fontawesome\fonts\fontawesome-webfont.woff" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
