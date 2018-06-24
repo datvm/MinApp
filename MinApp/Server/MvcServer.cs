@@ -20,17 +20,16 @@ namespace MinApp.Server
         public bool FileFallback { get; set; } = false;
         public IRouteTable RouteTable { get; set; }
 
-        public bool DisableCache { get; set; } = true;
-
-        public MvcServer() { }
+        public MvcServer()
+        {
+            this.RouteTable = new DefaultRouteTable();
+            this.RouteTable.LoadAttributeRoutes();
+        }
 
         public MvcServer(string fileFolder) : this()
         {
             this.FileFallback = true;
             this.FileFolder = fileFolder;
-
-            this.RouteTable = new DefaultRouteTable();
-            this.RouteTable.LoadAttributeRoutes();
         }
 
         protected override async Task ProcessRequestAsync(HttpListenerContext context)
@@ -64,7 +63,7 @@ namespace MinApp.Server
                     }
                     else
                     {
-                        actionResult = ((dynamic) methodResult).Result;
+                        actionResult = ((dynamic)methodResult).Result;
                     }
                 }
                 else
@@ -73,17 +72,16 @@ namespace MinApp.Server
                     {
                         actionResult = StatusCodeActionResult.NoContent();
                     }
+                    else
+                    {
+                        actionResult = methodResult as IActionResult;
+                    }
                 }
             }
 
             if (actionResult == null)
             {
                 actionResult = StatusCodeActionResult.NotFound();
-            }
-
-            if (this.DisableCache)
-            {
-                context.Response.AddHeader("Cache-Control", "no-cache");
             }
 
             actionResult.WriteResponse(context);

@@ -30,7 +30,7 @@ namespace MinApp.Routes
 
         public void LoadAttributeRoutes()
         {
-            var assembly = Assembly.GetCallingAssembly();
+            var assembly = Assembly.GetEntryAssembly();
 
             this.ParseAssembly(assembly);
         }

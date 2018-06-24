@@ -16,9 +16,13 @@ namespace MinApp.Server
 
         bool IsRunning { get; }
         bool IsDisposed { get; }
+        
+        bool DisableCache { get; set; }
 
         void Start();
         void Stop();
+
+        event ServerLogEventHandler Log;
 
     }
 

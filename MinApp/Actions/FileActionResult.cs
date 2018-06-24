@@ -70,6 +70,7 @@ namespace MinApp.Actions
             { ".tiff", "image/tiff" },
             { ".ts", "application/typescript" },
             { ".ttf", "font/ttf" },
+            { ".txt", "plain/text" },
             { ".vsd", "application/vnd.visio" },
             { ".wav", "audio/wav" },
             { ".weba", "audio/webm" },
@@ -90,7 +91,8 @@ namespace MinApp.Actions
             #endregion
         };
 
-        private const string DefaultContentType = "application/octet-stream";
+        public const string ApplicationOctetStreamMime = "application/octet-stream";
+        public const string DefaultContentType = ApplicationOctetStreamMime;
 
         public string FilePath { get; set; }
         public byte[] FileData { get; set; }
@@ -117,12 +119,11 @@ namespace MinApp.Actions
 
         public override void WriteResponse(HttpListenerContext context)
         {
+            this.SetContentType(context);
+
             if (!string.IsNullOrEmpty(this.FilePath))
             {
-                if (this.ContentType != null)
-                {
-                    this.ContentType = GuessContentType(this.FilePath);
-                }
+                
 
                 using (var fileStream = new FileStream(this.FilePath, FileMode.Open))
                 {
@@ -138,12 +139,16 @@ namespace MinApp.Actions
                 this.WriteStream(context, this.DataStream);
             }
 
-            this.SetContentType(context);
             base.WriteResponse(context);
         }
 
         protected virtual void SetContentType(HttpListenerContext context)
         {
+            if (this.ContentType == null && !string.IsNullOrEmpty(this.FilePath))
+            {
+                this.ContentType = GuessContentType(this.FilePath);
+            }
+
             context.Response.ContentType = this.ContentType ?? DefaultContentType;
         }
 
@@ -151,14 +156,12 @@ namespace MinApp.Actions
         {
             context.Response.ContentLength64 = stream.Length;
             stream.CopyTo(context.Response.OutputStream);
-            context.Response.OutputStream.Close();
         }
 
         protected virtual void WriteBytes(HttpListenerContext context)
         {
             context.Response.ContentLength64 = this.FileData.Length;
             context.Response.OutputStream.Write(this.FileData, 0, this.FileData.Length);
-            context.Response.OutputStream.Close();
         }
 
         private static string GuessContentType(string filePath)
@@ -172,6 +175,7 @@ namespace MinApp.Actions
 
             return result;
         }
+
 
     }
 

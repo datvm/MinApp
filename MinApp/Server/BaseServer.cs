@@ -18,6 +18,8 @@ namespace MinApp.Server
         public string HostName { get; set; } = "localhost";
         public int Port { get; set; }
 
+        public bool DisableCache { get; set; } = true;
+
         public bool IsRunning { get; protected set; }
         public bool IsDisposed { get; protected set; }
 
@@ -119,6 +121,11 @@ namespace MinApp.Server
                                 {
                                     try
                                     {
+                                        if (this.DisableCache)
+                                        {
+                                            context.Response.AddHeader("Cache-Control", "no-cache");
+                                        }
+
                                         await this.ProcessRequestAsync(context);
                                     }
                                     catch (Exception ex)

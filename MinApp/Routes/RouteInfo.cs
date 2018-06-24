@@ -36,7 +36,9 @@ namespace MinApp.Routes
             this.ReturnType = method.ReturnType;
             this.Parameters = method.GetParameters();
 
-            this.IsAsync = this.ReturnType.IsSubclassOf(typeof(Task));
+            this.IsAsync =
+                this.ReturnType == typeof(Task) ||
+                this.ReturnType.IsSubclassOf(typeof(Task));
             if (this.ReturnType.IsSubclassOfRawGeneric(typeof(Task<>)))
             {
                 this.AsyncReturnType = this.ReturnType.GetGenericArguments()[0];

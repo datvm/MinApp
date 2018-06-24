@@ -55,22 +55,22 @@ namespace MinApp.Actions
 
         #region Helper Result Methods
 
-        public IActionResult Ok()
+        public StatusCodeActionResult Ok()
         {
             return this.StatusCode(HttpStatusCode.OK);
         }
 
-        public IActionResult NotFound()
+        public StatusCodeActionResult NotFound()
         {
             return this.StatusCode(HttpStatusCode.NotFound);
         }
 
-        public IActionResult BadRequest()
+        public StatusCodeActionResult BadRequest()
         {
             return this.StatusCode(HttpStatusCode.BadRequest);
         }
 
-        public IActionResult StatusCode(HttpStatusCode statusCode)
+        public StatusCodeActionResult StatusCode(HttpStatusCode statusCode)
         {
             return new StatusCodeActionResult(statusCode);
         }
@@ -87,6 +87,21 @@ namespace MinApp.Actions
         public StringActionResult String(string response)
         {
             return new StringActionResult(response);
+        }
+
+        public StringActionResult String(object response)
+        {
+            return new StringActionResult(response.ToString());
+        }
+
+        public FileActionResult File(string filePath, string contentType = null)
+        {
+            return new FileActionResult(filePath, contentType);
+        }
+
+        public FileActionResult File(byte[] fileData, string contentType)
+        {
+            return new FileActionResult(fileData, contentType);
         }
 
         #endregion
