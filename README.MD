@@ -17,4 +17,6 @@ If you plan to support Windows 7, your HTML5, CSS3 and Javascript should support
 
 [MinApp Nuget Package](https://www.nuget.org/packages/MinApp/):
 
+`Install-Package MinApp`
+
 Please check [the wiki](https://github.com/datvm/MinApp/wiki) for usage and documentation.
