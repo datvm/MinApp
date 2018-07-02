@@ -1,6 +1,6 @@
 **MinApp** is a library for .NET Framework (targeted mainly at WPF Windows Application) to make UI layer for apps using Web-stack technologies: HTML5, CSS3 and Javascript (instead of Microsoft XAML).
 
-You can make an app UI in Web languages while have complete access to .NET Framework Windows API for the backend.
+You can make an app UI in Web languages while have complete access to .NET Framework Windows API for the backend. If you are familiar with ASP.NET MVC, you will feel yourself right at home.
 
 # Why MinApp
 
@@ -18,5 +18,7 @@ If you plan to support Windows 7, your HTML5, CSS3 and Javascript should support
 [MinApp Nuget Package](https://www.nuget.org/packages/MinApp/):
 
 `Install-Package MinApp`
+
+# Usage and Getting Started
 
 Please check [the wiki](https://github.com/datvm/MinApp/wiki) for usage and documentation.
