@@ -23,6 +23,8 @@ namespace MinApp.Server
         public bool IsRunning { get; protected set; }
         public bool IsDisposed { get; protected set; }
 
+        public IList<KeyValuePair<string, string>> CustomHeaders { get; private set; } = new List<KeyValuePair<string, string>>();
+
         public Uri RootUri
         {
             get
@@ -125,6 +127,11 @@ namespace MinApp.Server
                                         if (this.DisableCache)
                                         {
                                             context.Response.AddHeader("Cache-Control", "no-cache");
+                                        }
+
+                                        foreach (var header in this.CustomHeaders)
+                                        {
+                                            context.Response.AddHeader(header.Key, header.Value);
                                         }
 
                                         await this.ProcessRequestAsync(context);

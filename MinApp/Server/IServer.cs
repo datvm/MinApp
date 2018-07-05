@@ -13,6 +13,7 @@ namespace MinApp.Server
         string HostName { get; set; }
         int Port { get; set; }
         Uri RootUri { get; }
+        IList<KeyValuePair<string, string>> CustomHeaders { get; }
 
         bool IsRunning { get; }
         bool IsDisposed { get; }
